@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="../assets/images/logo.svg" type="image/svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <title>Dashboard</title>
+</head>
+
+<body>
+  <div class="menu-con">
+    <div class="menu">
+      <a class="nav-section" href="../index.html">
+        <img class="img-menu1 img-menu" src="../assets/images/Home2.svg" alt="home" />
+      </a>
+      <a class="nav-section" href="../about-us/about-us.html">
+        <img class="img-menu" src="../assets/images/team.svg" alt="team" />
+      </a>
+      <a class="nav-section" href="../green-bot/greenbot.html">
+        <img class="img-menu" src="../assets/images/bot.svg" alt="bot" />
+      </a>
+      <a class="nav-section" href="../blog/blog.html">
+        <img class="img-menu" src="../assets/images/blog-svg.svg" alt="blog" />
+      </a>
+      <a class="nav-section" href="../dashboard/dashboard.html">
+        <img class="img-menu" src="../assets/images/profile-user.svg" alt="dashboard" />
+      </a>
+      <img class="union2" src="../assets/images/Union.png" alt="Union" />
+    </div>
+  </div>
+  <a href="../index.html"><img id="loading" src="../assets/images/loading.svg" alt="Loading" /></a>
+  <img id="tf" src="../assets/images/tempurchurflower.svg" alt="tempurchurflower" />
+  <img id="AGreenBot" src="../assets/images/AnalizeGreenbot.svg" alt="AnalizeGreenbot" />
+  <a href="../green-bot/greenbot.html">
+    <p id="p1AGB">
+      <span id="p2AGB">!&nbsp;همه‌چیز&nbsp;روبه‌&nbsp;راهه</span><br />
+      !گیاهانت در بهترین وضعیت ممکن هستند! 🌿 دما، رطوبت و نور کاملاًایده‌آل‌اند <br />
+      از طراوت و رشدشان لذت ببر
+    </p>
+  </a>
+
+  <div id="plantList"></div>
+
+  <img id="newflower" src="../assets/images/newflower.svg" alt="newflower" style="cursor:pointer;" />
+
+  <div id="dropdownContainer" style="display:none;">
+    <input type="text" id="searchInput" placeholder="           نام گیاه را وارد کنید " autocomplete="on" />
+    <button id="ezafe"><img src="../assets/images/send2.svg" alt="" /></button>
+  </div>
+
+  <div id="loadingOverlay" style="display:none;">
+    <a href="../index.html"><img src="../assets/images/loading.svg" alt="Loading" /></a>
+  </div>
+
+  <img id="f-p" src="../assets/images/farmers-profile.svg" alt="farmers-profile" />
+  <a href="../index.html">
+    <p id="pfp1">خروج&nbsp;ازحساب </p>
+  </a>
+  <a href="../index.html"><img id="exit" src="../assets/images/exit.svg" alt="exit" /></a>
+  <img id="GCh" src="../assets/images/GreenChart.svg" alt="GreenChart" />
+  <img id="GH" src="../assets/images/Greenhub.svg" alt="Greenhub" />
+
+  <!-- جای مناسب برای نمایش نام نمایشی -->
+  <p id="welcomeText" style="font-weight:bold; font-size:1.2rem; margin: 10px 0;"></p>
+
+  <a href="../user-information/user-information.html">
+    <img id="farmers-photo" src="../assets/images/farmers-photo.svg" alt="farmers-photo" />
+  </a>
+
+  <div class="container-switches">
+    <div class="switch-wrapper" id="btn1">
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span>کنترل دما</span>
+    </div>
+    <div class="switch-wrapper" id="btn2">
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span>تهویه هوشمند</span>
+    </div>
+    <div class="switch-wrapper" id="btn3">
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span>تحلیل رشد</span>
+    </div>
+    <div class="switch-wrapper" id="btn4">
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span>آبیاری هوشمند</span>
+    </div>
+    <div class="switch-wrapper" id="btn5">
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span>نوردهی هوشمند</span>
+    </div>
+    <div class="switch-wrapper" id="btn6">
+      <label class="switch">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span>اعلان هشدار</span>
+    </div>
+  </div>
+
+  <script>
+    const displayName = localStorage.getItem("displayName");
+    if (displayName) {
+      document.getElementById("welcomeText").textContent = ` ${displayName}`;
+    } else {
+      document.getElementById("welcomeText").textContent = "";
+    }
+
+    const dropdownContainer = document.getElementById("dropdownContainer");
+    const newflowerBtn = document.getElementById("newflower");
+    const searchInput = document.getElementById("searchInput");
+    const plantList = document.getElementById("plantList");
+    const ezafeBtn = document.getElementById("ezafe");
+
+    newflowerBtn.addEventListener("click", () => {
+      dropdownContainer.style.display = "block";
+      searchInput.value = "";
+      searchInput.focus();
+    });
+
+    ezafeBtn.addEventListener("click", () => {
+      const plantName = searchInput.value.trim();
+      if (plantName === "") return;
+
+      const tag = document.createElement("div");
+      tag.className = "plant-tag";
+
+      tag.innerHTML = `
+        <span class="trash" onclick="this.parentElement.remove()">🗑</span>
+        <span class="light">نور: ؟</span>
+        <span class="humidity">رطوبت: ؟</span>
+        <span class="temp">دما: ؟</span>
+        <span class="name">${plantName}</span>
+      `;
+
+      plantList.appendChild(tag);
+      dropdownContainer.style.display = "none";
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        ezafeBtn.click();
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>

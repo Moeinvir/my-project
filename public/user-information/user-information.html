@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Green Sense | ثبت اطلاعات کاربر</title>
+  <link rel="stylesheet" href="user-style.css" />
+  <style>
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/index.html"><img style="margin-right: 10px;" src="../assets/images/logo.svg" alt="home" /></a>
+    <img src="../assets/images/hamburger.svg" alt="menu" />
+  </nav>
+
+  <img id="login" src="../assets/images/log-in.svg" alt="log-in image" />
+
+  <h2 id="name">اسم :</h2>
+  <input id="name1" placeholder="" type="text" maxlength="30" />
+
+  <h2 id="family">فامیل :</h2>
+  <input id="family1" placeholder="" type="text" maxlength="50" />
+
+  <h2 id="display-name">نام نمایشی :</h2>
+  <input id="display-name1" placeholder="" type="text" maxlength="50" />
+
+  <h2 id="birthday">تاریخ تولد : </h2>
+  <input id="birthday1" placeholder="مثال :1388/01/20" type="text" oninput="this.value=this.value.replace(/[^0-9/]/g,'')" maxlength="10" />
+
+  <h2 id="province">استان :</h2>
+  <input id="province1" placeholder="" type="text" maxlength="30" />
+
+  <h2 id="city">شهر :</h2>
+  <input id="city1" placeholder="" type="text" maxlength="30" />
+
+  <h2 id="job">شغل :</h2>
+  <select id="job1" name="choice">
+    <option value="option1">انتخاب کنید</option>
+    <option value="option2">خانه دار</option>
+    <option value="option3">گلخانه دار</option>
+    <option value="option4">کشاورز</option>
+  </select>
+
+  <button id="submitBtn" disabled>تأیید</button>
+
+  <div id="overlay">اطلاعات شما با موفقیت ثبت شد ✅</div>
+
+  <script>
+    const inputs = [
+      document.getElementById('name1'),
+      document.getElementById('family1'),
+      document.getElementById('display-name1'),
+      document.getElementById('birthday1'),
+      document.getElementById('province1'),
+      document.getElementById('city1'),
+    ];
+    
+    const jobSelect = document.getElementById('job1');
+    const submitBtn = document.getElementById('submitBtn');
+    const overlay = document.getElementById('overlay');
+    
+    const currentUserPhone = localStorage.getItem('currentUserPhone');
+    
+    if (!currentUserPhone) {
+      alert('شماره موبایل یافت نشد، لطفاً دوباره وارد شوید.');
+      window.location.href = '../log-in/log.html';
+    }
+    
+    // بررسی فرم کامل بودن
+    function checkFormFilled() {
+      const allFilled = inputs.every(input => input.value.trim() !== '');
+      const jobSelected = jobSelect.value !== 'option1';
+      submitBtn.disabled = !(allFilled && jobSelected);
+    }
+    
+    inputs.forEach(input => input.addEventListener('input', checkFormFilled));
+    jobSelect.addEventListener('change', checkFormFilled);
+    
+    // بارگذاری اطلاعات قبلی (اگر وجود داشت)
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/get-user/${currentUserPhone}`);
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('name1').value = data.name || '';
+          document.getElementById('family1').value = data.family || '';
+          document.getElementById('display-name1').value = data.displayName || '';
+          document.getElementById('birthday1').value = data.birthday || '';
+          document.getElementById('province1').value = data.province || '';
+          document.getElementById('city1').value = data.city || '';
+          jobSelect.value = data.job || 'option1';
+        }
+        checkFormFilled();
+      } catch (e) {
+        // اگر کاربر جدید بود، مشکلی نیست
+        checkFormFilled();
+      }
+    });
+    
+    // ارسال اطلاعات به سرور
+    submitBtn.addEventListener('click', async () => {
+      const data = {
+        phone: currentUserPhone,
+        name: document.getElementById('name1').value.trim(),
+        family: document.getElementById('family1').value.trim(),
+        displayName: document.getElementById('display-name1').value.trim(),
+        birthday: document.getElementById('birthday1').value.trim(),
+        province: document.getElementById('province1').value.trim(),
+        city: document.getElementById('city1').value.trim(),
+        job: jobSelect.value,
+      };
+
+      if (
+        !data.name || !data.family || !data.displayName || !data.birthday || !data.province || !data.city || data.job === 'option1'
+      ) {
+        alert('لطفا تمام فیلدها را کامل کنید.');
+        return;
+      }
+      
+      try {
+        const res = await fetch('http://localhost:3000/save-user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const result = await res.json();
+    
+        if (result.success) {
+          localStorage.setItem('displayName', data.displayName);
+          overlay.style.display = 'flex';
+          setTimeout(() => {
+            window.location.href = '../dashboard/dashboard.html';
+          }, 1500);
+        } else {
+          alert('خطا در ثبت اطلاعات');
+        }
+      } catch (e) {
+        alert('خطا در ارتباط با سرور');
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>

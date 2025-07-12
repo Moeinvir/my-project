@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Green Sense | ورود شماره</title>
+    <link rel="stylesheet" href="logstyle.css" />
+    <style>
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html"><img style="margin-right: 10px;" src="../assets/images/logo.svg" alt="home" /></a>
+        <img src="../assets/images/hamburger.svg" alt="menu" />
+    </nav>
+    <div class="box">
+        <div class="image">
+            <img src="../assets/images/log-in.svg" alt="log-in image" />
+        </div>
+        <div class="content">
+            <h2>خوش آمدید</h2>
+            <p>لطفا شماره موبایل خود را وارد کنید</p>
+            <input id="phone" placeholder="09** **** ****" type="text" maxlength="11" />
+            <button id="confirmBtn" disabled>تایید</button>
+        </div>
+    </div>
+
+    <script>
+        const phoneInput = document.getElementById("phone");
+        const confirmBtn = document.getElementById("confirmBtn");
+        
+        phoneInput.addEventListener("input", () => {
+            const value = phoneInput.value.trim();
+            const isValid = /^09\d{9}$/.test(value);
+            confirmBtn.disabled = !isValid;
+        });
+        
+        confirmBtn.addEventListener("click", async () => {
+            const phone = phoneInput.value.trim();
+            try {
+                const res = await fetch('http://localhost:3000/check-phone', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone }),
+                });
+                const data = await res.json();
+
+                localStorage.setItem("currentUserPhone", phone);
+
+                if (data.exists) {
+                    localStorage.setItem("displayName", data.displayName);
+                    window.location.href = "../dashboard/dashboard.html";
+                } else {
+                    window.location.href = "../user-information/user-information.html";
+                }
+            } catch (e) {
+                alert("خطا در ارتباط با سرور");
+                console.error(e);
+            }
+        });
+    </script>
+</body>
+</html>

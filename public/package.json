@@ -1,0 +1,7 @@
+{
+    "name": "sandpack-project",
+    "main": "/index.html",
+    "dependencies": {
+        "openai": "^4.103.0"
+    }
+}

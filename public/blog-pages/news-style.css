@@ -1,0 +1,258 @@
+@font-face {
+    font-family: 'iransans';
+    src: url(../assets/fonts/IRANSansWeb_Medium.woff2) format('woff2');
+}
+a{
+    color: white;
+}
+body{
+    position: relative;
+    font-family: 'iransans';
+    background: url(../assets/images/back.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 3000px;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin:20px 20px;
+}
+.container{
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    background: rgba(18, 54, 24, 0.1); 
+    backdrop-filter: blur(3px); 
+    border-radius: 15px; 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.text-news{
+    width: 800px;
+    margin: 0 auto;
+    color: white;
+    font-size: 18px;
+    text-align: justify;
+    line-height: 2;
+    margin-bottom: 30px;
+}
+.header{
+    color: white;
+    font-size: 30px;
+    margin-right: 90px;
+}
+.img-news{
+    width: 520px;
+    height: auto;
+    margin: 50px auto;
+}
+.date{
+    color: rgb(95, 91, 91);
+    margin-right: 90px;
+}
+.comments{
+    margin: 0 auto;
+    max-width: 1100px;
+    margin-top: 20px;
+    background: rgba(18, 54, 24, 0.1); 
+    backdrop-filter: blur(3px); 
+    border-radius: 15px; 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.comments h3{
+    color: white;
+    font-size: 30px;
+}
+.comments input{
+    padding: 50px;
+    background-color: #4b4949;
+    border-radius: 15px;
+}
+.comments button{
+    padding: 13px 50px;
+    font-size: 20px;
+    font-family: 'iransans';
+    margin-top: 26px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 15px
+
+}
+.count-comm{
+    margin: 20px 10px;
+    color: white;
+
+}
+footer{
+    flex-wrap: wrap;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    z-index: -1;
+    width: 100%;
+    height: 700px;
+    background: rgba(56, 56, 56, 0.1); 
+    backdrop-filter: blur(3px); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 24px;
+  }
+  .footer-left{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+  .social{
+    margin-bottom: 20px;
+  }
+  .text-social{
+    text-align: center;
+    font-size: 30px;
+  }
+  
+  .svg-social img{
+    margin-right: 30px;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+    
+  }
+  .svg-social img:hover {
+    transform: scale(1.2); 
+  }
+  .text-contact{
+    text-align: center;
+    font-size: 30px;
+  }
+  .number{
+    display: flex;
+    justify-content: right;
+  }
+  .number img{
+    margin-left: 10px;
+  }
+  .mail{
+    display: flex;
+  }
+  .mail img{
+    margin-left: 10px;
+  }
+  .n-m-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+  }
+  .footer-mainn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;    pointer-events:none;
+  
+  }
+  .footer-mainn a{
+    position: relative;
+    display: block;
+    z-index: 10;
+  }
+  .footer-right{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  
+  }
+  .footer-right img{
+    margin-right: 50px;
+  }
+  .svg-social{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width : 865px) {
+    .text-news{
+        width: 560px;
+    }
+    body{
+        height: 3200px;
+    }
+  }
+  @media (max-width: 680px) {
+    .footer-right{
+        display: none;
+    }
+    footer{
+        flex-direction: column;
+        flex-wrap: nowrap;
+        height: auto;
+    }
+    body{
+        height: 3400px;
+    }
+  }
+  @media (max-width : 647px) {
+    .container{
+        max-width: 450px;
+    }
+    .header{
+        font-size: 24px;
+        margin: 22px 39px;
+    }
+    .date{
+        margin-right: 47px;
+    }
+    .img-news{
+        width: 300px;
+    }
+    .comments{
+        max-width: 450px;
+    }
+    .text-news{
+        width: 364px;
+    }
+    body{
+      height: 4000px;
+    }
+  }
+  @media (max-width:440px) {
+    .header{
+        font-size: 22px;
+        margin: 22px 45px;
+    }
+    .comments{
+        max-width: 395px;
+    }
+    .container{
+        max-width: 395px;
+    }
+    .text-news{
+        width: 277px;
+        font-size: 16px;
+    }
+    .img-news{
+        width: 248px;
+    }
+    .date{
+        margin-right: 53px;
+        font-size: 14px;
+    }
+    .comments button{
+        margin: 10px 41px;
+    }
+  }
