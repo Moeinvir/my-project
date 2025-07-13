@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,10 +13,14 @@
       justify-content: space-between;
       margin: 10px;
     }
+
     #overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: rgba(0, 0, 0, 0.5);
       color: white;
       font-size: 1.5rem;
@@ -25,6 +30,7 @@
     }
   </style>
 </head>
+
 <body>
   <nav>
     <a href="/index.html"><img style="margin-right: 10px;" src="../assets/images/logo.svg" alt="home" /></a>
@@ -43,7 +49,8 @@
   <input id="display-name1" placeholder="" type="text" maxlength="50" />
 
   <h2 id="birthday">تاریخ تولد : </h2>
-  <input id="birthday1" placeholder="مثال :1388/01/20" type="text" oninput="this.value=this.value.replace(/[^0-9/]/g,'')" maxlength="10" />
+  <input id="birthday1" placeholder="مثال :1388/01/20" type="text"
+    oninput="this.value=this.value.replace(/[^0-9/]/g,'')" maxlength="10" />
 
   <h2 id="province">استان :</h2>
   <input id="province1" placeholder="" type="text" maxlength="30" />
@@ -72,32 +79,37 @@
       document.getElementById('province1'),
       document.getElementById('city1'),
     ];
-    
+
     const jobSelect = document.getElementById('job1');
     const submitBtn = document.getElementById('submitBtn');
     const overlay = document.getElementById('overlay');
-    
+
     const currentUserPhone = localStorage.getItem('currentUserPhone');
-    
+
+    // 📌 تشخیص baseURL: لوکال یا هاست
+    const baseURL = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000'
+      : '';
+
     if (!currentUserPhone) {
       alert('شماره موبایل یافت نشد، لطفاً دوباره وارد شوید.');
       window.location.href = '../log-in/log.html';
     }
-    
-    // بررسی فرم کامل بودن
+
+    // بررسی کامل بودن فرم
     function checkFormFilled() {
       const allFilled = inputs.every(input => input.value.trim() !== '');
       const jobSelected = jobSelect.value !== 'option1';
       submitBtn.disabled = !(allFilled && jobSelected);
     }
-    
+
     inputs.forEach(input => input.addEventListener('input', checkFormFilled));
     jobSelect.addEventListener('change', checkFormFilled);
-    
-    // بارگذاری اطلاعات قبلی (اگر وجود داشت)
+
+    // 📥 بارگذاری اطلاعات قبلی کاربر (در صورت وجود)
     window.addEventListener('DOMContentLoaded', async () => {
       try {
-        const res = await fetch(`http://localhost:3000/get-user/${currentUserPhone}`);
+        const res = await fetch(`${baseURL}/get-user/${currentUserPhone}`);
         if (res.ok) {
           const data = await res.json();
           document.getElementById('name1').value = data.name || '';
@@ -108,14 +120,13 @@
           document.getElementById('city1').value = data.city || '';
           jobSelect.value = data.job || 'option1';
         }
-        checkFormFilled();
       } catch (e) {
-        // اگر کاربر جدید بود، مشکلی نیست
-        checkFormFilled();
+        console.warn('🟡 کاربر جدید است یا ارتباط برقرار نشد.');
       }
+      checkFormFilled();
     });
-    
-    // ارسال اطلاعات به سرور
+
+    // 📤 ارسال اطلاعات کاربر به سرور
     submitBtn.addEventListener('click', async () => {
       const data = {
         phone: currentUserPhone,
@@ -129,20 +140,22 @@
       };
 
       if (
-        !data.name || !data.family || !data.displayName || !data.birthday || !data.province || !data.city || data.job === 'option1'
+        !data.name || !data.family || !data.displayName || !data.birthday ||
+        !data.province || !data.city || data.job === 'option1'
       ) {
         alert('لطفا تمام فیلدها را کامل کنید.');
         return;
       }
-      
+
       try {
-        const res = await fetch('http://localhost:3000/save-user', {
+        const res = await fetch(`${baseURL}/save-user`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
+
         const result = await res.json();
-    
+
         if (result.success) {
           localStorage.setItem('displayName', data.displayName);
           overlay.style.display = 'flex';
@@ -150,13 +163,15 @@
             window.location.href = '../dashboard/dashboard.html';
           }, 1500);
         } else {
-          alert('خطا در ثبت اطلاعات');
+          alert('❌ خطا در ثبت اطلاعات');
         }
       } catch (e) {
-        alert('خطا در ارتباط با سرور');
-        console.error(e);
+        alert('❌ خطا در ارتباط با سرور');
+        console.error('❌ Server Error:', e);
       }
     });
   </script>
+
 </body>
+
 </html>
