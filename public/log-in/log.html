@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,6 +15,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav>
         <a href="/index.html"><img style="margin-right: 10px;" src="../assets/images/logo.svg" alt="home" /></a>
@@ -34,21 +36,24 @@
     <script>
         const phoneInput = document.getElementById("phone");
         const confirmBtn = document.getElementById("confirmBtn");
-        
+
         phoneInput.addEventListener("input", () => {
             const value = phoneInput.value.trim();
             const isValid = /^09\d{9}$/.test(value);
             confirmBtn.disabled = !isValid;
         });
-        
+
         confirmBtn.addEventListener("click", async () => {
             const phone = phoneInput.value.trim();
             try {
-                const res = await fetch('http://localhost:3000/check-phone', {
+                const res = await fetch('/check-phone', { // ✅ آدرس نسبی
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phone }),
                 });
+
+                if (!res.ok) throw new Error("Server response not OK");
+
                 const data = await res.json();
 
                 localStorage.setItem("currentUserPhone", phone);
@@ -59,11 +64,15 @@
                 } else {
                     window.location.href = "../user-information/user-information.html";
                 }
+
             } catch (e) {
                 alert("خطا در ارتباط با سرور");
-                console.error(e);
+                console.error("❌ Server error:", e);
             }
         });
+
     </script>
+
 </body>
+
 </html>

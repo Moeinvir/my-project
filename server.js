@@ -75,7 +75,6 @@ app.get('/get-user/:phone', (req, res) => {
   }
 });
 
-// صفحه اصلی
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
