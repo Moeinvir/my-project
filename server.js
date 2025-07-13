@@ -4,6 +4,7 @@ const fs = require('fs');
 const cors = require('cors');
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 
@@ -78,3 +79,8 @@ app.get('/get-user/:phone', (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
+
