@@ -10,13 +10,10 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-// مسیر فایل داده‌ها
 const DATA_FILE = './users.json';
 
-// برای نمایش فایل‌های استاتیک از پوشه public
 app.use('/public', express.static('public'));
 
-// تابع خواندن کاربران از فایل
 function readUsers() {
   if (!fs.existsSync(DATA_FILE)) {
     fs.writeFileSync(DATA_FILE, JSON.stringify({}), 'utf-8');
@@ -25,12 +22,10 @@ function readUsers() {
   return JSON.parse(data || '{}');
 }
 
-// تابع نوشتن کاربران در فایل
 function writeUsers(users) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2), 'utf-8');
 }
 
-// بررسی وجود شماره موبایل
 app.post('/check-phone', (req, res) => {
   const { phone } = req.body;
 
@@ -47,7 +42,6 @@ app.post('/check-phone', (req, res) => {
   }
 });
 
-// ذخیره اطلاعات کاربر
 app.post('/save-user', (req, res) => {
   const { phone, name, family, displayName, birthday, province, city, job } = req.body;
 
@@ -68,7 +62,6 @@ app.post('/save-user', (req, res) => {
   res.json({ success: true });
 });
 
-// دریافت اطلاعات کاربر با شماره
 app.get('/get-user/:phone', (req, res) => {
   const phone = req.params.phone;
   const users = readUsers();
@@ -80,7 +73,6 @@ app.get('/get-user/:phone', (req, res) => {
   }
 });
 
-// اجرا روی پورت 3000
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
