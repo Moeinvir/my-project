@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="greenstyle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenbot</title>
+</head>
+
+<body>
+    <div class="menu-con">
+        <div class="menu">
+            <a class="nav-section" href="../index.html"><img class="img-menu1 img-menu" src="../assets/images/Home2.svg"
+                    alt="home"></a>
+            <a class="nav-section" href="../about-us/about-us.html"><img class="img-menu"
+                    src="../assets/images/team.svg" alt="team"></a>
+            <a class="nav-section" href="../green-bot/greenbot.html"><img class="img-menu"
+                    src="../assets/images/bot.svg" alt="bot"></a>
+            <a class="nav-section" href="../blog/blog.html"><img class="img-menu" src="../assets/images/blog-svg.svg"
+                    alt="blog"></a>
+            <a class="nav-section" href="../dashboard/dashboard.html"><img class="img-menu"
+                    src="../assets/images/profile-user.svg" alt="dashboard"></a>
+            <img class="union2" src="../assets/images/Union.png" alt="Union">
+        </div>
+    </div>
+    <div class="navbar">
+        <img src="../assets/Images/hamburger-md-svgrepo-com.svg" alt="Hamburger-menu" width="30px">
+    </div>
+    <div class="body">
+        <div class="container">
+            <div class="section2">
+                <div class="bot">
+                    <div class="chat-bot">
+                        <div><img src="../assets/Images/bot.svg" alt="bot" class="imgbot"></div>
+                        <p class="question" dir="rtl">سلام 👋 چه کمکی میتونم بکنم؟</p>
+                    </div>
+                    <div id="chatArea"
+                        style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 45vh;">
+                    </div>
+
+                    <div class="chatbot">
+                        <div class="chat-bot textmsg">
+                            <div>
+                                <img src="../assets/Images/micro.svg" alt="micophone" class="img-b">
+                                <img src="../assets/Images/image-l.svg" alt="gallery" class="img-b">
+                            </div>
+                            <input class="input" id="chatInput" type="text" name="chatbot" placeholder="type message..."
+                                style="font-size: large; font-family: iransans;">
+                            <img src="../assets/Images/send.svg" alt="send-button" class="img-b" onclick="sendMessage()"
+                                style="z-index: 9999;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("chatInput");
+            const userMessage = input.value.trim();
+            if (!userMessage) return;
+
+            input.value = "";
+
+            const chatArea = document.getElementById("chatArea");
+
+            const userChat = document.createElement("div");
+            userChat.className = "chat-bot";
+            userChat.style.justifyContent = "flex-end";
+
+            userChat.innerHTML = `
+            <p class="question" dir="rtl" style="background-color:#025A4A; color:white; border-radius:15px 15px 0px 15px;">
+                ${userMessage}
+            </p>
+            <div><img src="../assets/Images/profile-user.svg" alt="you" class="imgbot"></div>
+        `;
+            chatArea.appendChild(userChat);
+
+            // پاسخ شبیه‌سازی‌شده (می‌توانید لیست پاسخ‌ها را گسترش دهید)
+            const fakeReplies = [
+                "سلام! چطور می‌تونم کمکت کنم؟",
+                "لطفاً سوالت رو واضح‌تر بپرس 😊",
+                "جالبه! می‌تونی بیشتر توضیح بدی؟",
+                "متأسفم، متوجه نشدم. دوباره بپرس!",
+                "در حال حاضر آفلاینم ولی سعی می‌کنم کمک کنم!"
+            ];
+            const reply = fakeReplies[Math.floor(Math.random() * fakeReplies.length)];
+
+            const botReply = document.createElement("div");
+            botReply.className = "chat-bot";
+            botReply.innerHTML = `
+            <div><img src="../assets/Images/bot.svg" alt="bot" class="imgbot"></div>
+            <p class="question" dir="rtl">${reply}</p>
+        `;
+            chatArea.appendChild(botReply);
+
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        document.getElementById("chatInput").addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+
+
+
+</body>
+
+</html>
