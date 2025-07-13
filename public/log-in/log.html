@@ -37,6 +37,11 @@
         const phoneInput = document.getElementById("phone");
         const confirmBtn = document.getElementById("confirmBtn");
 
+        // تشخیص محیط و ساختن baseURL مناسب
+        const baseURL = window.location.hostname === "localhost"
+            ? "http://localhost:3000"
+            : "";
+
         phoneInput.addEventListener("input", () => {
             const value = phoneInput.value.trim();
             const isValid = /^09\d{9}$/.test(value);
@@ -46,11 +51,14 @@
         confirmBtn.addEventListener("click", async () => {
             const phone = phoneInput.value.trim();
             try {
-                const res = await fetch('http://localhost:3000/check-phone', {
+                const res = await fetch(`${baseURL}/check-phone`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phone }),
                 });
+
+                if (!res.ok) throw new Error("Server responded with status: " + res.status);
+
                 const data = await res.json();
 
                 localStorage.setItem("currentUserPhone", phone);
@@ -61,12 +69,14 @@
                 } else {
                     window.location.href = "../user-information/user-information.html";
                 }
+
             } catch (e) {
                 alert("خطا در ارتباط با سرور");
-                console.error(e);
+                console.error("❌ ارتباط با سرور برقرار نشد:", e);
             }
         });
     </script>
+
 
 </body>
 
