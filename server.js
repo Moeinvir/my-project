@@ -2,20 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-
-
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-const DATA_FILE = './users.json';
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/public', express.static('public'));
+const DATA_FILE = './users.json';
 
 function readUsers() {
   if (!fs.existsSync(DATA_FILE)) {
@@ -48,7 +47,7 @@ app.post('/check-phone', (req, res) => {
 app.post('/save-user', (req, res) => {
   const { phone, name, family, displayName, birthday, province, city, job } = req.body;
 
-  console.log('Save user data:', req.body); // لاگ گرفتن از داده‌های ارسالی
+  console.log('Save user data:', req.body);
 
   if (!phone || !/^09\d{9}$/.test(phone)) {
     return res.status(400).json({ error: 'شماره موبایل معتبر نیست' });
@@ -76,12 +75,11 @@ app.get('/get-user/:phone', (req, res) => {
   }
 });
 
+// صفحه اصلی
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public');
-});
-
-app.use(express.static(path.join(__dirname, 'public')));
