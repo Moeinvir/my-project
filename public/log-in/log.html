@@ -46,6 +46,24 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone }),
         });
+        async function checkPhone(phone) {
+            try {
+                const res = await fetch("https://greensence.onrender.com/check-phone", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ phone })
+                });
+
+                const data = await res.json();
+                console.log("✅ پاسخ:", data);
+            } catch (err) {
+                console.error("❌ ارتباط با سرور برقرار نشد:", err);
+            }
+        }
+
+        checkPhone("09123456789");
 
         const phoneInput = document.getElementById("phone");
         const confirmBtn = document.getElementById("confirmBtn");
