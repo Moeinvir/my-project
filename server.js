@@ -3,18 +3,18 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
 
-
-const app = express();
+const app = express(); 
 
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
 
 app.use(express.static(path.join(__dirname, 'public')));
 
