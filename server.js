@@ -4,23 +4,17 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 
-const app = express(); 
-
-const DATA_FILE = path.join(__dirname, 'users.json');
-
+const app = express();
 const PORT = process.env.PORT || 3000;
+
+const DATA_FILE = path.resolve(__dirname, 'users.json');
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
-
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 function readUsers() {
   if (!fs.existsSync(DATA_FILE)) {
@@ -34,6 +28,11 @@ function writeUsers(users) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2), 'utf-8');
 }
 
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
+
 app.post('/check-phone', (req, res) => {
   const { phone } = req.body;
 
@@ -44,16 +43,16 @@ app.post('/check-phone', (req, res) => {
   const users = readUsers();
 
   if (users[phone]) {
-    res.json({ exists: true, displayName: users[phone].displayName });
+    return res.status(200).json({ exists: true, displayName: users[phone].displayName });
   } else {
-    res.json({ exists: false });
+    return res.status(200).json({ exists: false });
   }
 });
 
 app.post('/save-user', (req, res) => {
   const { phone, name, family, displayName, birthday, province, city, job } = req.body;
 
-  console.log('Save user data:', req.body);
+  console.log('✅ Save user:', req.body);
 
   if (!phone || !/^09\d{9}$/.test(phone)) {
     return res.status(400).json({ error: 'شماره موبایل معتبر نیست' });
@@ -67,7 +66,7 @@ app.post('/save-user', (req, res) => {
   users[phone] = { name, family, displayName, birthday, province, city, job };
   writeUsers(users);
 
-  res.json({ success: true });
+  res.status(200).json({ success: true });
 });
 
 app.get('/get-user/:phone', (req, res) => {
@@ -75,9 +74,9 @@ app.get('/get-user/:phone', (req, res) => {
   const users = readUsers();
 
   if (users[phone]) {
-    res.json(users[phone]);
+    return res.status(200).json(users[phone]);
   } else {
-    res.status(404).json({ error: 'کاربر یافت نشد' });
+    return res.status(404).json({ error: 'کاربر یافت نشد' });
   }
 });
 
@@ -86,5 +85,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
