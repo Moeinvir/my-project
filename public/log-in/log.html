@@ -29,11 +29,18 @@
             <h2>خوش آمدید</h2>
             <p>لطفا شماره موبایل خود را وارد کنید</p>
             <input id="phone" placeholder="09** **** ****" type="text" maxlength="11" />
-            <button id="confirmBtn" disabled>تایید</button>
+            <button id="confirmBtn" disabled style="cursor: pointer;">تایید</button>
         </div>
     </div>
 
     <script>
+        const baseURL = window.location.hostname.includes("localhost")
+            ? "http://localhost:3000"
+            : "https://greensence.onrender.com";
+
+        console.log("🔍 baseURL:", baseURL);
+
+
         const res = await fetch(`${baseURL}/check-phone`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -45,12 +52,6 @@
 
         const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
         const isRender = window.location.hostname.includes("onrender.com");
-
-        const baseURL = isLocal
-            ? "http://localhost:3000"
-            : isRender
-                ? "https://greensence.onrender.com"
-                : "https://greensence.ir"; // اگر دامنه اختصاصی داشتی
 
         phoneInput.addEventListener("input", () => {
             const value = phoneInput.value.trim();
