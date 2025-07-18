@@ -34,33 +34,30 @@
     </div>
 
     <script>
-        const baseURL = window.location.hostname.includes("localhost")
-            ? "http://localhost:3000"
-            : "https://greensence.onrender.com";
-
-        console.log("🔍 baseURL:", baseURL);
+        const baseURL = "https://greensence.onrender.com"; // تنظیم دستی چون موبایل WebView ممکنه window.location نده
 
         const phoneInput = document.getElementById("phone");
         const confirmBtn = document.getElementById("confirmBtn");
 
         phoneInput.addEventListener("input", () => {
             const value = phoneInput.value.trim();
-            const isValid = /^09\d{9}$/.test(value);
-            confirmBtn.disabled = !isValid;
+            confirmBtn.disabled = !/^09\d{9}$/.test(value);
         });
 
-        async function checkPhone(phone) {
+        confirmBtn.addEventListener("click", async () => {
+            const phone = phoneInput.value.trim();
             try {
                 const res = await fetch(`${baseURL}/check-phone`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     body: JSON.stringify({ phone }),
                 });
 
                 if (!res.ok) throw new Error("Server responded with status: " + res.status);
 
                 const data = await res.json();
-                console.log("✅ پاسخ سرور:", data);
 
                 localStorage.setItem("currentUserPhone", phone);
 
@@ -70,17 +67,59 @@
                 } else {
                     window.location.href = "../user-information/user-information.html";
                 }
-
             } catch (e) {
                 alert("❌ خطا در ارتباط با سرور");
                 console.error("❌ ارتباط با سرور برقرار نشد:", e);
             }
-        }
-
-        confirmBtn.addEventListener("click", () => {
-            const phone = phoneInput.value.trim();
-            checkPhone(phone);
         });
+
+        // const baseURL = window.location.hostname.includes("localhost")
+        //     ? "http://localhost:3000"
+        //     : "https://greensence.onrender.com";
+
+        // console.log("🔍 baseURL:", baseURL);
+
+        // const phoneInput = document.getElementById("phone");
+        // const confirmBtn = document.getElementById("confirmBtn");
+
+        // phoneInput.addEventListener("input", () => {
+        //     const value = phoneInput.value.trim();
+        //     const isValid = /^09\d{9}$/.test(value);
+        //     confirmBtn.disabled = !isValid;
+        // });
+
+        // async function checkPhone(phone) {
+        //     try {
+        //         const res = await fetch(`${baseURL}/check-phone`, {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify({ phone }),
+        //         });
+
+        //         if (!res.ok) throw new Error("Server responded with status: " + res.status);
+
+        //         const data = await res.json();
+        //         console.log("✅ پاسخ سرور:", data);
+
+        //         localStorage.setItem("currentUserPhone", phone);
+
+        //         if (data.exists) {
+        //             localStorage.setItem("displayName", data.displayName);
+        //             window.location.href = "../dashboard/dashboard.html";
+        //         } else {
+        //             window.location.href = "../user-information/user-information.html";
+        //         }
+
+        //     } catch (e) {
+        //         alert("❌ خطا در ارتباط با سرور");
+        //         console.error("❌ ارتباط با سرور برقرار نشد:", e);
+        //     }
+        // }
+
+        // confirmBtn.addEventListener("click", () => {
+        //     const phone = phoneInput.value.trim();
+        //     checkPhone(phone);
+        // });
     </script>
 
 
