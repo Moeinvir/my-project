@@ -34,13 +34,23 @@
     </div>
 
     <script>
+        const res = await fetch(`${baseURL}/check-phone`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone }),
+        });
+
         const phoneInput = document.getElementById("phone");
         const confirmBtn = document.getElementById("confirmBtn");
 
-        // تشخیص محیط و ساختن baseURL مناسب
-        const baseURL = window.location.hostname === "localhost"
+        const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+        const isRender = window.location.hostname.includes("onrender.com");
+
+        const baseURL = isLocal
             ? "http://localhost:3000"
-            : "";
+            : isRender
+                ? "https://greensence.onrender.com"
+                : "https://greensence.ir"; // اگر دامنه اختصاصی داشتی
 
         phoneInput.addEventListener("input", () => {
             const value = phoneInput.value.trim();
@@ -56,6 +66,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phone }),
                 });
+
 
                 if (!res.ok) throw new Error("Server responded with status: " + res.status);
 
