@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const DATA_FILE = './users.json';
+const DATA_FILE = path.join(__dirname, 'users.json');
 
 function readUsers() {
   if (!fs.existsSync(DATA_FILE)) {
