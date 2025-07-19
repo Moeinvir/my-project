@@ -6,19 +6,14 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 const DATA_FILE = path.resolve(__dirname, 'users.json');
 
-// ✅ پیکربندی کامل CORS برای WebView
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-}));
-app.options('*', cors());
-
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 function readUsers() {
@@ -33,17 +28,20 @@ function writeUsers(users) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2), 'utf-8');
 }
 
+
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
 app.post('/check-phone', (req, res) => {
   const { phone } = req.body;
+
   if (!phone || !/^09\d{9}$/.test(phone)) {
     return res.status(400).json({ error: 'شماره موبایل معتبر نیست' });
   }
 
   const users = readUsers();
+
   if (users[phone]) {
     return res.status(200).json({ exists: true, displayName: users[phone].displayName });
   } else {
@@ -53,6 +51,9 @@ app.post('/check-phone', (req, res) => {
 
 app.post('/save-user', (req, res) => {
   const { phone, name, family, displayName, birthday, province, city, job } = req.body;
+
+  console.log('✅ Save user:', req.body);
+
   if (!phone || !/^09\d{9}$/.test(phone)) {
     return res.status(400).json({ error: 'شماره موبایل معتبر نیست' });
   }
@@ -84,5 +85,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on https://localhost:${PORT}`);
 });
