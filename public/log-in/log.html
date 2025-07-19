@@ -37,38 +37,29 @@
         const phoneInput = document.getElementById("phone");
         const confirmBtn = document.getElementById("confirmBtn");
 
+        // آدرس سرور بر اساس محیط (لوکال یا رندر)
+        const baseURL = window.location.hostname.includes("localhost")
+            ? "http://localhost:3000"
+            : "https://greensence.onrender.com";
+
         phoneInput.addEventListener("input", () => {
             const value = phoneInput.value.trim();
             const isValid = /^09\d{9}$/.test(value);
             confirmBtn.disabled = !isValid;
         });
 
-        function postCheckPhone(phone, callback) {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://greensence.onrender.com/check-phone", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        const res = JSON.parse(xhr.responseText);
-                        callback(null, res);
-                    } else {
-                        callback("خطا در ارتباط با سرور");
-                    }
-                }
-            };
-            xhr.send(JSON.stringify({ phone }));
-        }
+        async function checkPhone(phone) {
+            try {
+                const res = await fetch(`${baseURL}/check-phone`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone }),
+                });
 
-        confirmBtn.addEventListener("click", () => {
-            const phone = phoneInput.value.trim();
+                if (!res.ok) throw new Error("Server responded with status: " + res.status);
 
-            postCheckPhone(phone, (err, data) => {
-                if (err) {
-                    alert(err);
-                    console.error("❌ خطا در ارسال درخواست:", err);
-                    return;
-                }
+                const data = await res.json();
+                console.log("✅ پاسخ سرور:", data);
 
                 localStorage.setItem("currentUserPhone", phone);
 
@@ -78,58 +69,18 @@
                 } else {
                     window.location.href = "../user-information/user-information.html";
                 }
-            });
+
+            } catch (e) {
+                alert("❌ خطا در ارتباط با سرور");
+                console.error("❌ ارتباط با سرور برقرار نشد:", e);
+            }
+        }
+
+        confirmBtn.addEventListener("click", () => {
+            const phone = phoneInput.value.trim();
+            checkPhone(phone);
         });
     </script>
-
-    <!--// const baseURL = window.location.hostname.includes("localhost")
-    // ? "http://localhost:3000"
-    // : "https://greensence.onrender.com";
-
-    // console.log("🔍 baseURL:", baseURL);
-
-    // const phoneInput = document.getElementById("phone");
-    // const confirmBtn = document.getElementById("confirmBtn");
-
-    // phoneInput.addEventListener("input", () => {
-    // const value = phoneInput.value.trim();
-    // const isValid = /^09\d{9}$/.test(value);
-    // confirmBtn.disabled = !isValid;
-    // });
-
-    // async function checkPhone(phone) {
-    // try {
-    // const res = await fetch(`${baseURL}/check-phone`, {
-    // method: 'POST',
-    // headers: { 'Content-Type': 'application/json' },
-    // body: JSON.stringify({ phone }),
-    // });
-
-    // if (!res.ok) throw new Error("Server responded with status: " + res.status);
-
-    // const data = await res.json();
-    // console.log("✅ پاسخ سرور:", data);
-
-    // localStorage.setItem("currentUserPhone", phone);
-
-    // if (data.exists) {
-    // localStorage.setItem("displayName", data.displayName);
-    // window.location.href = "../dashboard/dashboard.html";
-    // } else {
-    // window.location.href = "../user-information/user-information.html";
-    // }
-
-    // } catch (e) {
-    // alert("❌ خطا در ارتباط با سرور");
-    // console.error("❌ ارتباط با سرور برقرار نشد:", e);
-    // }
-    // }
-
-    // confirmBtn.addEventListener("click", () => {
-    // const phone = phoneInput.value.trim();
-    // checkPhone(phone);
-    // });
--->
 
 
 </body>
