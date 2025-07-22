@@ -11,6 +11,7 @@ a {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  text-decoration: none;
 }
 
 body {
@@ -51,7 +52,7 @@ h1 {
       #3C764D 0%,
       #8AC69B 44%,
       #C0FFD2 92%);
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;
   text-align: center;
@@ -559,13 +560,6 @@ h1 {
   margin-right: 214px;
 }
 
-.slider4 {
-  position: absolute;
-  right: -361px;
-  bottom: 370px;
-}
-
-
 footer {
   display: flex;
   z-index: -1;
@@ -644,7 +638,6 @@ footer {
   align-items: center;
   justify-content: center;
   flex: 1;
-
 }
 
 .footer-right {
