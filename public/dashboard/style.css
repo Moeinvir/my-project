@@ -1,7 +1,15 @@
+@font-face {
+    font-family: 'iransans';
+    src: url(../assets/fonts/iransans.ttf) ;
+}
 .menu-con {
     z-index: 1;
     display: flex;
     justify-content: center;
+}
+
+#welcomeText{
+    font-family: 'iransans';
 }
 
 .menu {
